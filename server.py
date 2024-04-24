@@ -1,5 +1,6 @@
 import rpyc
 import socket
+import time
 
 class MyService(rpyc.Service):
 
@@ -19,19 +20,22 @@ class MyService(rpyc.Service):
         self.connected = False
         print(f"Conexão encerrada com cliente localizado em {conn._channel.stream.sock.getpeername()}")
 
-    def exposed_array_sum(self, array):
+    def exposed_soma_vetor(self, vetor):
         if self.connected:
-            return sum(array)
+            start = time.time()
+            soma = sum(vetor)
+            end = time.time()
+            print(f"Tempo de execução no servidor: {end-start} segundos")
+            return soma
         else:
             print("Conexão não estabelecida")
 
     def exposed_get_answer(self): 
-        # este é um método exposto
         return 42
 
     exposed_the_real_answer_though = 43     # este é um atributo exposto
 
-    def exposed_get_question(self):  
+    def get_question(self):  
         # este método não é exposto
         return "Qual é  a cor do cavalo branco de Napoleão?"
 
